@@ -64,6 +64,7 @@ while(! feof($file))
 			foreach($arr['val'] as  $v =>$score) {
 				$Redis->zAdd($arr['key'],$score, $v);
 			}
+			$Redis->setTimeout($arr['key'],$arr['expire']);
 			break;
 
 
