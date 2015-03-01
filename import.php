@@ -26,47 +26,41 @@ while(! feof($file))
   //echo fgets($file). "<br />";
   $arr = json_decode(fgets($file),true);
   $key = $arr['key'];
-  $Redis->setTimeout($arr['key'],$arr['expire']);
+
   switch ($arr['type']) {
 		case $Redis::REDIS_STRING:
 			echo "string\n";
-			/*$arr['type'] = $type;
-			$arr['key'] = $key;
-			$arr['val'] = $Redis->get($key);*/
+
 			$Redis->set($arr['key'],$arr['val']);
+			$Redis->setTimeout($arr['key'],$arr['expire']);
 			break;
 		case $Redis::REDIS_HASH:
 			echo "hash\n";
-			/*$arr['type'] = $type;
-			$arr['key'] = $key;
-			$arr['val'] = $Redis->hGetAll($key);*/
+
 
 			$Redis->hMset($arr['key'],$arr['val']);
+			$Redis->setTimeout($arr['key'],$arr['expire']);
 
 			break;
 		case $Redis::REDIS_LIST:
 			echo "list\n";
-			/*$arr['type'] = $type;
-			$arr['key'] = $key;
-			$arr['val'] = $Redis->lRange($key, 0, -1);*/
+
 			foreach($arr['val'] as  $v) {
 				$Redis->rPush($arr['key'], $v);
 			}
+			$Redis->setTimeout($arr['key'],$arr['expire']);
 			break;
 		case $Redis::REDIS_SET:
 			echo "set\n";
-			/*$arr['type'] = $type;
-			$arr['key'] = $key;
-			$arr['val'] = $Redis->sMembers($key);*/
+
 			foreach($arr['val'] as $v) {
 				$Redis->sAdd($arr['key'], $v);
 			}
+			$Redis->setTimeout($arr['key'],$arr['expire']);
 			break;
 		case $Redis::REDIS_ZSET:
 			echo "zset\n";
-			/*$arr['type'] = $type;
-			$arr['key'] = $key;
-			$arr['val'] = $Redis->zRange($key, 0, -1, true);*/
+
 			foreach($arr['val'] as  $v =>$score) {
 				$Redis->zAdd($arr['key'],$score, $v);
 			}
