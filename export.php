@@ -4,8 +4,8 @@ $host = "127.0.0.1";
 $port = 6379;
 
   /* 这里替换为实例id和实例password,没有则注释掉 */
-$user = "fb65db74bf1311e4 ";
-$pwd = "Jiang1314";
+/*$user = "xxxx";
+$pwd = "xxxx";*/
 $Redis = new redis();
 //$Redis->pconnect('127.0.0.1', 6379);
 if ($Redis->pconnect($host, $port) == false) {
