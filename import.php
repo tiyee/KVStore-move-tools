@@ -25,7 +25,7 @@ while(! feof($file))
   {
   //echo fgets($file). "<br />";
   $arr = json_decode(fgets($file),true);
-  $redis->delete($arr['key']);
+  $Redis->delete($arr['key']);
 
   switch ($arr['type']) {
 		case $Redis::REDIS_STRING:
