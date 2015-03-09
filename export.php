@@ -4,8 +4,8 @@ $host = "127.0.0.1";
 $port = 6379;
 
   /* 这里替换为实例id和实例password,没有则注释掉 */
-/*$user = "xxxx";
-$pwd = "xxxx";*/
+/*$user = "xxxxxxxxxxxxxxxxxxxx";
+$pwd = "xxxxxxx";*/
 $Redis = new redis();
 //$Redis->pconnect('127.0.0.1', 6379);
 if ($Redis->pconnect($host, $port) == false) {
@@ -16,9 +16,15 @@ if ($Redis->pconnect($host, $port) == false) {
 /*if ($Redis->auth($user . ":" . $pwd) == false) {
     die($Redis->getLastError());
 }*/
-$keys = $Redis->keys('*');
-$out = '';
-foreach($keys as $key) {
+
+file_put_contents('./redis.json', '');
+$it = NULL; /* Initialize our iterator to NULL */
+
+$Redis->setOption(Redis::OPT_SCAN, Redis::SCAN_RETRY); /* retry when we get no keys back */
+while($keys = $Redis->scan($it)) {
+
+	$out = '';
+    foreach($keys as $key) {
 	//echo $Redis->type($key),"\n";
 	$arr = array();
 	$type = $Redis->type($key);
@@ -70,7 +76,16 @@ foreach($keys as $key) {
 	}
 	$out .= json_encode($arr)."\n";
 
+	}
+	file_put_contents('./redis.json', $out,FILE_APPEND);
 }
+
+
+
+
+/*$keys = $Redis->keys('*');
+$out = '';*/
+
 //echo $out;
 $Redis->close();
-file_put_contents('./redis.json', $out);
+
