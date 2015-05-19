@@ -1,4 +1,14 @@
 <?php
+
+function setTimeout($Redis,$key,$expire) {
+    if ($arr = -1 ) {
+        $Redis->persist($key);
+    } elseif($arr > -1) {
+        $Redis->setTimeout($key,$expire);
+    }
+}
+
+
 /* 这里替换为连接的实例host和port */
 $host = "xxxxxxxxxxx.m.cnhza.kvstore.aliyuncs.com";//改成你自己的
 $port = 6379;
@@ -32,14 +42,14 @@ while(! feof($file))
 			echo "string\n";
 
 			$Redis->set($arr['key'],$arr['val']);
-			$Redis->setTimeout($arr['key'],$arr['expire']);
+			setTimeout($Redis,$arr['key'],$arr['expire']);
 			break;
 		case $Redis::REDIS_HASH:
 			echo "hash\n";
 
 
 			$Redis->hMset($arr['key'],$arr['val']);
-			$Redis->setTimeout($arr['key'],$arr['expire']);
+			setTimeout($Redis,$arr['key'],$arr['expire']);
 
 			break;
 		case $Redis::REDIS_LIST:
@@ -48,7 +58,7 @@ while(! feof($file))
 			foreach($arr['val'] as  $v) {
 				$Redis->rPush($arr['key'], $v);
 			}
-			$Redis->setTimeout($arr['key'],$arr['expire']);
+			setTimeout($Redis,$arr['key'],$arr['expire']);
 			break;
 		case $Redis::REDIS_SET:
 			echo "set\n";
@@ -56,7 +66,7 @@ while(! feof($file))
 			foreach($arr['val'] as $v) {
 				$Redis->sAdd($arr['key'], $v);
 			}
-			$Redis->setTimeout($arr['key'],$arr['expire']);
+			setTimeout($Redis,$arr['key'],$arr['expire']);
 			break;
 		case $Redis::REDIS_ZSET:
 			echo "zset\n";
@@ -64,7 +74,7 @@ while(! feof($file))
 			foreach($arr['val'] as  $v =>$score) {
 				$Redis->zAdd($arr['key'],$score, $v);
 			}
-			$Redis->setTimeout($arr['key'],$arr['expire']);
+			setTimeout($Redis,$arr['key'],$arr['expire']);
 			break;
 
 
